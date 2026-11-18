@@ -17,8 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
-  <script type="module" crossorigin src="./assets/main-CzolP7aX.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main-BLck6Dqp.css">
+  <script type="module" crossorigin src="./assets/main-D6vMQp4W.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-XlK05iaq.css">
 </head>
 <body>
 <canvas id="field" aria-label="The battlefield"></canvas>
@@ -164,6 +164,9 @@
       <div class="setting-row" id="fullscreen-row"><span>Full screen<small>F11 on most computers</small></span>
         <button class="switch" id="fullscreen-on" role="switch" aria-checked="false" aria-label="Full screen"><i></i></button>
       </div>
+      <div class="setting-row"><span>Show FPS<small>Frames per second, in the corner</small></span>
+        <button class="switch" id="fps-on" role="switch" aria-checked="false" aria-label="Show FPS"><i></i></button>
+      </div>
     </section>
     <div class="settings-foot"><span id="settings-version"></span><a href="privacy.html" target="_blank" rel="noopener">Privacy</a></div>
   </div>
@@ -223,6 +226,12 @@
           <h2>The Ratkin War</h2>
           <p class="muted">The rat-men pour up out of the earth. Lead the King's army from the Green Valley to the Warlord's Hold.</p>
           <div class="war-progress"><div class="war-bar"><i id="war-ratkin-bar"></i></div><span id="war-ratkin-line"></span></div>
+          <div class="difficulty" id="war-ratkin-difficulty-row">
+            <div class="tabs mini" id="war-ratkin-difficulty" role="radiogroup" aria-label="Difficulty">
+              <button type="button" role="radio" data-difficulty="normal">Normal</button><button type="button" role="radio" data-difficulty="hard">Hard</button><button type="button" role="radio" data-difficulty="veryHard">Very hard</button>
+            </div>
+            <p class="muted" id="war-ratkin-difficulty-about"></p>
+          </div>
           <button class="button primary wide" id="war-ratkin-play">START</button>
         </div>
       </div>
@@ -233,6 +242,12 @@
           <h2>The Ratkin Rising</h2>
           <p class="muted">Lead the Ratkin up out of the earth and into the Kingdom, all the way to the King's Keep.</p>
           <div class="war-progress"><div class="war-bar"><i id="war-rising-bar"></i></div><span id="war-rising-line"></span></div>
+          <div class="difficulty" id="war-rising-difficulty-row">
+            <div class="tabs mini" id="war-rising-difficulty" role="radiogroup" aria-label="Difficulty">
+              <button type="button" role="radio" data-difficulty="normal">Normal</button><button type="button" role="radio" data-difficulty="hard">Hard</button><button type="button" role="radio" data-difficulty="veryHard">Very hard</button>
+            </div>
+            <p class="muted" id="war-rising-difficulty-about"></p>
+          </div>
           <button class="button primary wide" id="war-rising-play">START</button>
         </div>
       </div>
