@@ -17,8 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
-  <script type="module" crossorigin src="./assets/main-CeY37juB.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main-B1dDQmqX.css">
+  <script type="module" crossorigin src="./assets/main-DfU1f6hg.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-DaPI6Bwq.css">
 </head>
 <body>
 <canvas id="field" aria-label="The battlefield"></canvas>
@@ -70,7 +70,10 @@
     <div class="ghost-key hidden" id="ghost-key">
       <div class="count-row"><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="none" stroke="#F4E7C5" stroke-opacity="0.6" stroke-width="1.2"/></svg><span class="muted">Last formation</span></div>
     </div>
+    <!-- Recruit beside the field (the Upgrades panel, moved here): buy troops and paint them at once. -->
+    <button class="counts-recruit hidden" id="counts-recruit" type="button" aria-pressed="false" title="Recruit troops without leaving the battle"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Recruit</button>
   </div>
+  <div class="deploy-recruit hidden" id="deploy-recruit"></div>
   <!-- Zoom: for a mouse, a trackpad or a finger, whatever the wheel does. -->
   <div class="card zoom hidden" id="zoom">
     <button id="zoom-in" title="Zoom in (+)" aria-label="Zoom in"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
@@ -322,7 +325,7 @@
       <span><i class="owned"></i>Owned</span><span><i class="affordable"></i>Can buy now</span><span><i class="open"></i>Need more gold</span><span><i class="next"></i>Locked</span><span class="tree-key-note">Buy an upgrade to open the locks after it</span>
     </div>
     <div class="card recruit-panel" id="recruit-panel">
-      <div class="recruit-head"><h2 id="recruit-title">RECRUIT</h2><span class="muted small" id="recruit-tip">Hold to buy faster</span></div>
+      <div class="recruit-head"><h2 id="recruit-title">RECRUIT</h2><span class="muted small" id="recruit-tip">Hold to buy faster</span><button class="recruit-close" id="recruit-close" type="button" title="Close" aria-label="Close Recruit"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
       <!-- Your whole army's power, counting up with each recruit, training and upgrade. -->
       <div class="army-power hidden" id="army-power" title="Your army's power: its health and the damage it deals, as one number. Twice the army, twice the power. It goes up with each recruit, training and upgrade."><span class="army-power-label"><svg class="swords" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l8 8M9.5 12.5l3-3M11.5 11.5l2 2M13 3l-8 8M6.5 12.5l-3-3M4.5 11.5l-2 2"/></svg>ARMY POWER</span><span class="army-power-value" id="army-power-value">0</span></div>
       <div class="recruit-rows" id="recruit-rows"></div>
