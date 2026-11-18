@@ -4,12 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Thousandfold</title>
+<meta name="theme-color" content="#2B2019">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Thousandfold">
+<meta property="og:description" content="Paint your army onto the field and watch thousands of soldiers fight. 100 battles against the Ratkin.">
+<meta property="og:url" content="https://thousandfold.online/">
+<meta property="og:image" content="https://thousandfold.online/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="Paint your army onto the field and watch thousands of soldiers fight. Lead the King's army through 100 battles against the Ratkin.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
-  <script type="module" crossorigin src="./assets/main-CMsdF7IW.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main-wEvG9Qc9.css">
+  <script type="module" crossorigin src="./assets/main-BcXVzZp7.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-C_xbO_VA.css">
 </head>
 <body>
 <canvas id="field" aria-label="The battlefield"></canvas>
@@ -135,10 +144,9 @@
 
   <!-- The wars to choose from: the Ratkin's hundred battles, and the Orcs' to come. -->
   <div class="screen hidden" id="menu-screen">
-    <div class="menu-head"><h1>THOUSANDFOLD</h1><p class="muted">Choose your war</p>
-      <!-- Your progress in your Google account (src/online/cloud.ts): only on thousandfold.online. -->
-      <div class="cloud hidden" id="cloud"></div>
-    </div>
+    <div class="menu-head"><h1>THOUSANDFOLD</h1><p class="muted">Choose your war</p></div>
+    <!-- Your account, top right beside the sound switch (src/online/cloud.ts): only on thousandfold.online. -->
+    <div class="cloud hidden" id="cloud"></div>
     <div class="wars">
       <div class="card war-card">
         <div class="war-art" id="war-ratkin-art"></div>
@@ -162,7 +170,7 @@
       </div>
     </div>
     <!-- ElevenLabs' free plan asks for this credit (text only: a games portal allows no outside links). -->
-    <p class="menu-credit muted">Sound effects and music made with ElevenLabs (elevenlabs.io)</p>
+    <p class="menu-credit muted">Sound effects and music made with ElevenLabs (elevenlabs.io) · <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p>
   </div>
 
   <!-- World map -->
@@ -182,8 +190,10 @@
     <div class="road hidden" id="road">
       <div class="road-inner" id="road-inner">
         <svg class="road-path" id="road-svg" preserveAspectRatio="none" aria-hidden="true">
-          <path id="road-all" fill="none" stroke="#6A5340" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-          <path id="road-done" fill="none" stroke="var(--mint)" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          <!-- A worn dirt road over the grass: its dark edge, the dirt, then the part you have travelled in mint. -->
+          <path id="road-edge" fill="none" stroke="#5E4E33" stroke-opacity="0.75" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+          <path id="road-all" fill="none" stroke="#C2AD82" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+          <path id="road-done" fill="none" stroke="var(--mint)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
         </svg>
         <div id="road-nodes"></div>
       </div>
