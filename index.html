@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Thousandfold</title>
+<meta name="description" content="Paint your army onto the field and watch thousands of soldiers fight. Lead the King's army through 100 battles against the Ratkin.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
+  <script type="module" crossorigin src="./assets/main-DO409ID0.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-DknOSGBF.css">
+</head>
+<body>
+<canvas id="field" aria-label="The battlefield"></canvas>
+
+<div id="ui">
+  <!-- The bar along the top: back, the screen's title or the score, and your gold. -->
+  <div class="topbar">
+    <div class="topbar-side">
+      <button class="button" id="back">‹ Map</button>
+      <button class="button hidden" id="to-menu" title="Choose your war">‹ Wars</button>
+      <div class="tabs hidden" id="world-tabs"></div>
+    </div>
+    <div class="topbar-middle">
+      <!-- Both armies: troops and power. In battle, live; on Deploy above the heading, as they will start. -->
+      <div class="card score hidden" id="score">
+        <div class="score-row">
+          <span class="side"><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="var(--mint)"/></svg><span id="you-count">0</span>
+            <span class="power" title="Your army's power: the health it has left and the damage it deals, as one number. Twice the army, twice the power."><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l8 8M9.5 12.5l3-3M11.5 11.5l2 2M13 3l-8 8M6.5 12.5l-3-3M4.5 11.5l-2 2"/></svg><span id="you-power">0</span></span></span>
+          <span class="clock" id="clock">LEVEL 1 · 0:00</span>
+          <span class="side"><span class="power" title="The Ratkin's power: the health they have left and the damage they deal, as one number."><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l8 8M9.5 12.5l3-3M11.5 11.5l2 2M13 3l-8 8M6.5 12.5l-3-3M4.5 11.5l-2 2"/></svg><span id="enemy-power">0</span></span>
+            <span id="enemy-count">0</span><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="var(--orange)"/></svg></span>
+        </div>
+        <div class="strength"><div class="you" id="strength-you"></div><div class="them"></div></div>
+      </div>
+      <div class="card heading" id="heading">
+        <div class="label" id="heading-label">DEPLOY</div>
+        <div class="title" id="heading-title">LEVEL 1 · FIRST BLOOD</div>
+      </div>
+      <div class="hint" id="hint">Press FIGHT</div>
+      <div class="wave-chip hidden" id="wave-chip"></div>
+      <div class="wave-chip hold-chip hidden" id="hold-chip"></div>
+    </div>
+    <div class="topbar-side right">
+      <div class="momentum hidden" id="momentum" title="Momentum: keep the kills coming for more gold">×1.0</div>
+      <button class="chip auto hidden" id="auto" title="Auto-battle: paints your whole army, fights, and goes on to the next battle" aria-pressed="false">AUTO</button>
+      <button class="chip mute" id="mute" title="Sound on or off (M)" aria-label="Sound"></button>
+      <div class="chip gold-chip" id="gold-chip" title="Your gold">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="var(--gold)"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="var(--ground)" stroke-opacity="0.45" stroke-width="1.5"/></svg>
+        <span id="gold">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deploy -->
+  <div class="card counts" id="counts">
+    <div class="count-row"><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="var(--orange)"/></svg><span class="muted" id="enemy-label">Enemy</span><strong id="enemy-total">0</strong></div>
+    <div class="count-row hidden" id="waves-row" title="More enemies arrive during the fight"><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 3.5l4 4 4-4M2 7l4 4 4-4" fill="none" stroke="var(--orange)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="muted">Waves</span><strong id="waves-total">0</strong></div>
+    <div class="count-row" id="you-row"><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="var(--mint)"/></svg><span class="muted" id="you-label">You</span><span class="full-tag" title="Everyone you have is on the field">ALL IN</span><strong id="you-total">0 / 0</strong></div>
+    <div class="ghost-key hidden" id="ghost-key">
+      <div class="count-row"><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="none" stroke="#F4E7C5" stroke-opacity="0.6" stroke-width="1.2"/></svg><span class="muted">Last formation</span></div>
+    </div>
+  </div>
+  <!-- Zoom: for a mouse, a trackpad or a finger, whatever the wheel does. -->
+  <div class="card zoom hidden" id="zoom">
+    <button id="zoom-in" title="Zoom in (+)" aria-label="Zoom in"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    <button id="zoom-out" title="Zoom out (−)" aria-label="Zoom out"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    <button id="zoom-fit" title="Show the whole field (0)" aria-label="Show the whole field"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2.5 6.5v-4h4M11.5 2.5h4v4M15.5 11.5v4h-4M6.5 15.5h-4v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+  <div class="zone-label" id="zone-label">YOUR ZONE — DRAG TO PAINT TROOPS</div>
+  <div class="hill-labels" id="hill-labels"></div>
+  <div class="card side-card hidden" id="tactics-card">
+    <div class="side-title" id="commands-title"><span>COMMANDS</span><span class="muted">all go in</span></div>
+    <div class="command-list" id="command-list"></div>
+    <button class="button scout-button" id="deploy-scout" title="Scout: see where the enemy will be in 5 seconds. 3 uses per battle; the number shows how many are left (R)."></button>
+  </div>
+  <div class="bar" id="deploy-bar">
+    <div class="slots" id="slots"></div>
+    <div class="divider"></div>
+    <div class="brush">
+      <div class="brush-top">
+        <div class="shapes" id="shapes" role="group" aria-label="Brush shape"></div>
+        <label for="brush" id="brush-label">3 × 3</label>
+      </div>
+      <input id="brush" type="range" min="1" max="10" step="1" value="3">
+    </div>
+    <div class="divider"></div>
+    <button class="icon-button tool-button" id="undo" title="Undo (Ctrl+Z)" aria-label="Undo"></button>
+    <button class="icon-button tool-button" id="stamps-button" title="Stamps: keep a formation and place it again" aria-label="Stamps"></button>
+    <button class="button primary fight" id="fight">FIGHT</button>
+  </div>
+  <div class="card stamps hidden" id="stamps">
+    <div class="side-title"><span>STAMPS</span><span class="muted">tap one to place it</span></div>
+    <div class="stamp-list" id="stamp-list"></div>
+    <button class="button" id="save-stamp"></button>
+  </div>
+
+  <!-- Battle -->
+  <div class="bar hidden" id="battle-bar">
+    <div class="battle-reserve" id="battle-reserve"></div>
+    <div class="divider" id="reserve-divider"></div>
+    <div class="battle-commands" id="battle-commands"></div>
+    <div class="divider" id="battle-divider"></div>
+    <button class="icon-button" id="pause" aria-label="Pause">
+      <svg viewBox="0 0 18 18" aria-hidden="true" id="pause-icon"><rect x="3" y="2" width="4" height="14" rx="1"/><rect x="11" y="2" width="4" height="14" rx="1"/></svg>
+    </button>
+    <button class="icon-button restart-button" id="restart" aria-label="Restart this battle" title="Restart this battle from the start, with the same army">
+      <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3.6 9.6a5.6 5.6 0 1 0 1.7-4.4"/><path d="M4.6 1.8v3.8h3.8"/></svg>
+    </button>
+    <div class="tabs" id="speeds">
+      <button data-speed="1" class="on">1×</button>
+      <button data-speed="2">2×</button>
+      <button data-speed="4">4×</button>
+    </div>
+  </div>
+
+  <!-- Victory and Defeat, over the field where the fight ended -->
+  <!-- The end of a battle, over the field: VICTORY or OVERRUN, before the result card. -->
+  <div class="end-banner hidden" id="end-banner" aria-live="polite"><div class="end-title" id="end-title"></div><div class="end-line" id="end-line"></div></div>
+  <div class="result hidden" id="result">
+    <div class="card result-card">
+      <div class="result-stars" id="result-stars" aria-hidden="true"></div>
+      <h1 id="result-title">VICTORY</h1>
+      <p class="muted" id="result-line"></p>
+      <div class="tiles" id="result-tiles"></div>
+      <div class="unlock hidden" id="result-unlock"></div>
+      <div class="tip hidden" id="result-tip"><span class="tip-label">TIP</span><span id="result-tip-text"></span></div>
+      <p class="muted note" id="result-note"></p>
+      <div class="result-buttons" id="result-buttons"></div>
+      <button class="link-button" id="save-painting" title="Every fallen unit left a splash: keep the field as a picture">Save the battle painting</button>
+    </div>
+  </div>
+
+  <!-- The wars to choose from: the Ratkin's hundred battles, and the Orcs' to come. -->
+  <div class="screen hidden" id="menu-screen">
+    <div class="menu-head"><h1>THOUSANDFOLD</h1><p class="muted">Choose your war</p></div>
+    <div class="wars">
+      <div class="card war-card">
+        <div class="war-art" id="war-ratkin-art"></div>
+        <div class="war-body">
+          <div class="eyebrow">CAMPAIGN · 100 BATTLES</div>
+          <h2>The Ratkin War</h2>
+          <p class="muted">The rat-men pour up out of the earth. Lead the King's army from the Green Valley to the Warlord's Hold.</p>
+          <div class="war-progress"><div class="war-bar"><i id="war-ratkin-bar"></i></div><span id="war-ratkin-line"></span></div>
+          <button class="button primary wide" id="war-ratkin-play">START</button>
+        </div>
+      </div>
+      <div class="card war-card soon">
+        <div class="war-art soon-art" id="war-orc-art"></div>
+        <div class="war-body">
+          <div class="eyebrow">CAMPAIGN</div>
+          <h2>The Orc War</h2>
+          <p class="muted">Green-skinned hordes come down from the mountains: fewer than the rats, and far stronger.</p>
+          <div class="war-progress"><span>Coming soon</span></div>
+          <button class="button wide" disabled>COMING SOON</button>
+        </div>
+      </div>
+    </div>
+    <!-- ElevenLabs' free plan asks for this credit (text only: a games portal allows no outside links). -->
+    <p class="menu-credit muted">Sound effects and music made with ElevenLabs (elevenlabs.io)</p>
+  </div>
+
+  <!-- World map -->
+  <div class="screen hidden" id="map-screen">
+    <div class="map-title">
+      <h1 id="world-title">WORLD 1 · THE PLAINS</h1>
+      <p class="muted" id="world-line"></p>
+    </div>
+    <div class="stage" id="stage">
+      <svg class="path" viewBox="0 0 1280 720" preserveAspectRatio="none" aria-hidden="true">
+        <path id="path-all" fill="none" stroke="#6A5340" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>
+        <path id="path-done" fill="none" stroke="var(--mint)" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div id="nodes"></div>
+    </div>
+    <!-- The 100 battles: one road, scrolled sideways. -->
+    <div class="road hidden" id="road">
+      <div class="road-inner" id="road-inner">
+        <svg class="road-path" id="road-svg" preserveAspectRatio="none" aria-hidden="true">
+          <path id="road-all" fill="none" stroke="#6A5340" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          <path id="road-done" fill="none" stroke="var(--mint)" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <div id="road-nodes"></div>
+      </div>
+    </div>
+    <div class="card level-panel" id="level-panel">
+      <div><div class="eyebrow" id="panel-number">LEVEL 1</div><h2 id="panel-name">First Blood</h2></div>
+      <p class="muted" id="panel-about"></p>
+      <div class="facts" id="panel-facts"></div>
+      <div class="goals" id="panel-goals"></div>
+      <button class="button primary wide" id="deploy">NEXT BATTLE</button>
+      <button class="button wide" id="open-recruit">Upgrades</button>
+    </div>
+  </div>
+
+  <!-- Recruit -->
+  <div class="screen hidden" id="recruit-screen">
+    <div class="stage tree-stage" id="tree-stage">
+      <!-- 1.3 times the window's size: drag to move, the wheel zooms, W A S D move (src/screens/upgrades.ts). -->
+      <div class="tree-canvas" id="tree-canvas">
+        <svg class="tree-links" id="tree-links" viewBox="0 0 1280 720" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div id="tree-nodes"></div>
+        <div class="card tree-card" id="tree-card"></div>
+      </div>
+      <div class="card zoom tree-zoom" id="tree-zoom">
+        <button id="tree-zoom-in" title="Zoom in (+)" aria-label="Zoom in"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+        <button id="tree-zoom-out" title="Zoom out (−)" aria-label="Zoom out"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+        <button id="tree-zoom-fit" title="Show all your upgrades (0)" aria-label="Show all your upgrades"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2.5 6.5v-4h4M11.5 2.5h4v4M15.5 11.5v4h-4M6.5 15.5h-4v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+    <div class="tree-key">
+      <span><i class="owned"></i>Owned</span><span><i class="affordable"></i>Can buy now</span><span><i class="open"></i>Need more gold</span><span><i class="next"></i>Locked</span><span class="tree-key-note">Buy an upgrade to open the locks after it</span>
+    </div>
+    <div class="card recruit-panel" id="recruit-panel">
+      <div class="recruit-head"><h2 id="recruit-title">RECRUIT</h2><span class="muted small" id="recruit-tip">Hold to buy faster</span></div>
+      <!-- Your whole army's power, counting up with each recruit, training and upgrade. -->
+      <div class="army-power hidden" id="army-power" title="Your army's power: its health and the damage it deals, as one number. Twice the army, twice the power. It goes up with each recruit, training and upgrade."><span class="army-power-label"><svg class="swords" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l8 8M9.5 12.5l3-3M11.5 11.5l2 2M13 3l-8 8M6.5 12.5l-3-3M4.5 11.5l-2 2"/></svg>ARMY POWER</span><span class="army-power-value" id="army-power-value">0</span></div>
+      <div class="recruit-rows" id="recruit-rows"></div>
+      <!-- Always in view at the panel's foot: how big your army is and the way on; above it, a sign when there is more to scroll to. -->
+      <div class="recruit-foot" id="recruit-foot">
+        <button class="more-below hidden" id="more-below" type="button">▼ More below</button>
+        <div class="army-size"><span class="muted label">ARMY SIZE</span><span id="army-size">0</span></div>
+        <button class="button primary wide" id="next-battle">NEXT BATTLE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="perf hidden" id="perf"></div>
+</div>
+
+</body>
+</html>
