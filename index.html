@@ -17,8 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap">
-  <script type="module" crossorigin src="./assets/main-DfU1f6hg.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main-DaPI6Bwq.css">
+  <script type="module" crossorigin src="./assets/main-B7s6G70k.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-DAKOtmdL.css">
 </head>
 <body>
 <canvas id="field" aria-label="The battlefield"></canvas>
@@ -54,6 +54,9 @@
     <div class="topbar-side right">
       <div class="momentum hidden" id="momentum" title="Momentum: keep the kills coming for more gold">×1.0</div>
       <button class="chip auto hidden" id="auto" title="Auto-battle: paints your whole army, fights, and goes on to the next battle" aria-pressed="false">AUTO</button>
+      <!-- Full screen, in and out (where a browser has none, an iPhone's: the whole field). The zoom
+           itself is the wheel, a pinch, + and −, and 0 for the whole field. -->
+      <button class="chip mute full-chip hidden" id="zoom" title="Full screen" aria-label="Full screen"></button>
       <button class="chip mute" id="mute" title="Sound on or off (M)" aria-label="Sound"></button>
       <div class="chip gold-chip" id="gold-chip" title="Your gold">
         <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="var(--gold)"/><circle cx="9" cy="9" r="4.5" fill="none" stroke="var(--ground)" stroke-opacity="0.45" stroke-width="1.5"/></svg>
@@ -70,16 +73,11 @@
     <div class="ghost-key hidden" id="ghost-key">
       <div class="count-row"><svg class="dot" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="none" stroke="#F4E7C5" stroke-opacity="0.6" stroke-width="1.2"/></svg><span class="muted">Last formation</span></div>
     </div>
-    <!-- Recruit beside the field (the Upgrades panel, moved here): buy troops and paint them at once. -->
-    <button class="counts-recruit hidden" id="counts-recruit" type="button" aria-pressed="false" title="Recruit troops without leaving the battle"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Recruit</button>
   </div>
+  <!-- Recruit beside the field (the Upgrades panel, moved here): buy troops and paint them at once.
+       On a phone this button opens it as a sheet; on a wider screen it is always open. -->
+  <button class="counts-recruit hidden" id="counts-recruit" type="button" aria-pressed="false" title="Recruit troops without leaving the battle"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Recruit</button>
   <div class="deploy-recruit hidden" id="deploy-recruit"></div>
-  <!-- Zoom: for a mouse, a trackpad or a finger, whatever the wheel does. -->
-  <div class="card zoom hidden" id="zoom">
-    <button id="zoom-in" title="Zoom in (+)" aria-label="Zoom in"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
-    <button id="zoom-out" title="Zoom out (−)" aria-label="Zoom out"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
-    <button id="zoom-fit" title="Show the whole field (0)" aria-label="Show the whole field"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2.5 6.5v-4h4M11.5 2.5h4v4M15.5 11.5v4h-4M6.5 15.5h-4v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
   <div class="zone-label" id="zone-label">YOUR ZONE — DRAG TO PAINT TROOPS</div>
   <div class="hill-labels" id="hill-labels"></div>
   <div class="card side-card hidden" id="tactics-card">
